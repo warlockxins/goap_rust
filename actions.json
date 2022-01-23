@@ -1,0 +1,148 @@
+{
+    "actions": {
+        "search Weapon": {
+            "cost": 1,
+            "pre_state": {
+                "hasWeapon": false,
+                "hasBomb": true
+            },
+            "post_state": {
+                "seeWeapon": true
+            }
+        },
+        "pickupWeapon": {
+            "cost": 1,
+            "pre_state": {
+                "seeWeapon": true,
+                "hasWeapon": false
+            },
+            "post_state": {
+                "hasWeapon": true,
+                "seeWeapon": false,
+                "hasBomb": false
+            }
+        },
+        "search Ammo": {
+            "cost": 1,
+            "pre_state": {
+                "hasWeapon": true,
+                "hasAmmo": false
+            },
+            "post_state": {
+                "seeAmmo": true
+            }
+        },
+        "pickup Ammo": {
+            "cost": 1,
+            "pre_state": {
+                "hasWeapon": true,
+                "hasAmmo": false,
+                "seeAmmo": true
+            },
+            "post_state": {
+                "hasAmmo": true,
+                "seeAmmo": false
+            }
+        },
+        "scout with Weapon": {
+            "cost": 1,
+            "pre_state": {
+                "hasWeapon": true,
+                "hasAmmo": true,
+                "seeEnemy": false
+            },
+            "post_state": {
+                "seeEnemy": true
+            }
+        },
+        "Aiming": {
+            "cost": 1,
+            "pre_state": {
+                "hasWeapon": true,
+                "hasAmmo": true,
+                "seeEnemy": true,
+                "onLineOfFire": false
+            },
+            "post_state": {
+                "onLineOfFire": true
+            }
+        },
+        "Attack with Weapon": {
+            "cost": 2,
+            "pre_state": {
+                "hasWeapon": true,
+                "hasAmmo": true,
+                "seeEnemy": true,
+                "onLineOfFire": true
+            },
+            "post_state": {
+                "enemyAlive": false,
+                "seeEnemy": false,
+                "onLineOfFire": false
+            }
+        },
+        "Attack with Blood": {
+            "cost": 10,
+            "pre_state": {
+                "injured": false,
+                "seeEnemy": true,
+                "enemyAlive": true
+            },
+            "post_state": {
+                "enemyAlive": false,
+                "seeEnemy": false,
+                "injured": true
+            }
+        },
+        "Scout Suicidal": {
+            "cost": 1,
+            "pre_state": {
+                "injured": false,
+                "seeEnemy": false
+            },
+            "post_state": {
+                "seeEnemy": true
+            }
+        },
+        "Change mood": {
+            "cost": 10,
+            "pre_state": {
+                "readyForPeace": true
+            },
+            "post_state": {
+                "foundPeace": true
+            }
+        }
+    },
+    "goals": [
+        {
+            "name": "Kill the enemy",
+            "state": {
+                "enemyAlive": false
+            }
+        },
+        {
+            "name": "Be peaceful",
+            "state": {
+                "foundPeace": true
+            }
+        }
+    ],
+    "worldState": {
+        "alive": true,
+        "injured": false,
+        "enemyAlive": true,
+        "seeWeapon": false,
+        "seeAmmo": false,
+        "seeBomb": false,
+        "seeHeal": false,
+        "seeEnemy": false,
+        "onLineOfFire": false,
+        "nearEnemy": false,
+        "hasWeapon": false,
+        "hasAmmo": false,
+        "hasBomb": false,
+        "foundPeace": false,
+        "readyForPeace": true
+    }
+}
