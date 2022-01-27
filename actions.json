@@ -4,7 +4,7 @@
             "cost": 1,
             "pre_state": {
                 "hasWeapon": false,
-                "hasBomb": true
+                "hasBomb": false
             },
             "post_state": {
                 "seeWeapon": true
