@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use serde_json::{Result, Value};
+use serde_json::Result;
 
 use std::collections::HashMap;
 use std::fs;
@@ -59,7 +59,7 @@ struct PlanConfig {
     worldState: HashMap<String, bool>,
 }
 
-fn get_setup() -> Result<(PlanConfig)> {
+fn get_setup() -> Result<PlanConfig> {
     let contents =
         fs::read_to_string("actions.json").expect("Something went wrong reading the file");
 
@@ -74,13 +74,14 @@ fn main() {
             let leaves = execute(config);
             let duration = start.elapsed();
 
+            println!("actions: {:?}", leaves);
             println!("elapsed {:?}", duration);
         }
         Err(e) => println!("error parsing config: {:?}", e),
     }
 }
 
-fn execute(config: PlanConfig) -> Vec<usize> {
+fn execute(config: PlanConfig) -> Vec<String> {
     let g = Gnode {
         id: String::from("start"),
         from_node: None,
@@ -88,22 +89,22 @@ fn execute(config: PlanConfig) -> Vec<usize> {
         running_cost: 0,
     };
 
-    let mut nodes = vec![g];
+    let mut nodes: Vec<Gnode> = Vec::with_capacity(300);
+    nodes.push(g);
 
     let mut cheapest: usize = 10000;
-    let leaves = build_graph(0, &config.goals, &config.actions, &mut nodes, &mut cheapest);
+    let leaf = build_graph(0, &config.goals, &config.actions, &mut nodes, &mut cheapest);
 
-    for l in &leaves {
-        let mut idx_option = Some(*l);
-        println!(
-            "___________________________ cost {}",
-            nodes[*l].running_cost
-        );
-        while let Some(idx) = idx_option {
-            println!("-> {}", nodes[idx].id);
-            idx_option = nodes[idx].from_node;
-        }
+    let mut idx_option = leaf;
+    let mut leaves: Vec<String> = Vec::with_capacity(100);
+    while let Some(idx) = idx_option {
+        leaves.push(nodes[idx].id.clone());
+        idx_option = nodes[idx].from_node;
     }
+
+    leaves.pop(); // remove start
+    leaves.reverse();
+
     return leaves;
 }
 
@@ -113,48 +114,50 @@ fn build_graph<'a>(
     available_actions: &HashMap<String, Gaction>,
     nodes: &mut Vec<Gnode>,
     cheapest: &mut usize,
-) -> Vec<usize> {
-    let mut leaves: Vec<usize> = vec![];
+) -> Option<usize> {
     let start_node_option = nodes.get(start_node_index);
-
     if start_node_option.is_none() {
-        return vec![];
+        return None;
     }
 
+    let mut leaf: Option<usize> = None;
     let start_node = start_node_option.unwrap();
 
     let next_state_base = start_node.state.clone();
     let running_cost = start_node.running_cost;
 
-    for (key, action) in available_actions {
-        let mut next_state = next_state_base.clone();
-        let has_preconditions = action.are_preconditions_met(&next_state);
+    for (key, action) in available_actions.into_iter() {
+        let has_preconditions = action.are_preconditions_met(&next_state_base);
 
         if has_preconditions {
-            action.update_with_post_conditions(&mut next_state);
-
             let mut cost: usize = running_cost + action.cost;
 
-            let next_node: Gnode = Gnode {
-                id: String::from(key),
-                from_node: Some(start_node_index),
-                state: next_state.clone(),
-                running_cost: cost,
-            };
+            if cost > *cheapest {
+                continue;
+            }
 
-            nodes.push(next_node);
+            let mut next_state = next_state_base.clone();
+            action.update_with_post_conditions(&mut next_state);
 
             let matching_goal = available_goals
                 .into_iter()
                 .find(|&g| hasmap_contains(&next_state, &g.state));
 
+            let next_node: Gnode = Gnode {
+                id: key.to_string(),
+                from_node: Some(start_node_index),
+                state: next_state,
+                running_cost: cost,
+            };
+
+            nodes.push(next_node);
+
             if let Some(_g) = matching_goal {
-                if (cheapest > &mut cost) {
+                if cheapest > &mut cost {
                     let existing_size = nodes.len() - 1;
-                    leaves.push(existing_size);
+                    leaf = Some(existing_size);
 
                     *cheapest = cost;
-                    println!("now seting {}, cost {}", key, cheapest);
                 }
             } else {
                 let mut next_available_actions: HashMap<String, Gaction> =
@@ -162,7 +165,7 @@ fn build_graph<'a>(
 
                 next_available_actions.remove(key);
 
-                let mut leaves_internal = build_graph(
+                let leaf_internal = build_graph(
                     nodes.len() - 1,
                     available_goals,
                     &next_available_actions,
@@ -170,10 +173,12 @@ fn build_graph<'a>(
                     cheapest,
                 );
 
-                leaves.append(&mut leaves_internal);
+                if let Some(leaf_index) = leaf_internal {
+                    leaf = Some(leaf_index);
+                }
             }
         }
     }
 
-    return leaves;
+    return leaf;
 }
