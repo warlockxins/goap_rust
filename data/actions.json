@@ -1,0 +1,338 @@
+{
+    "actions": [
+        {
+            "name": "search Weapon",
+            "cost": 1,
+            "post_state": [
+                {
+                    "parameter": "seeWeapon",
+                    "value": true
+                }
+            ],
+            "pre_state": [
+                {
+                    "parameter": "hasWeapon",
+                    "value": false
+                },
+                {
+                    "parameter": "hasBomb",
+                    "value": false
+                }
+            ]
+        },
+        {
+            "name": "pickupWeapon",
+            "cost": 1,
+            "post_state": [
+                {
+                    "parameter": "hasWeapon",
+                    "value": true
+                },
+                {
+                    "parameter": "seeWeapon",
+                    "value": false
+                },
+                {
+                    "parameter": "hasBomb",
+                    "value": false
+                }
+            ],
+            "pre_state": [
+                {
+                    "parameter": "seeWeapon",
+                    "value": true
+                },
+                {
+                    "parameter": "hasWeapon",
+                    "value": false
+                }
+            ]
+        },
+        {
+            "name": "search Ammo",
+            "cost": 1,
+            "post_state": [
+                {
+                    "parameter": "seeAmmo",
+                    "value": true
+                }
+            ],
+            "pre_state": [
+                {
+                    "parameter": "hasWeapon",
+                    "value": true
+                },
+                {
+                    "parameter": "hasAmmo",
+                    "value": false
+                }
+            ]
+        },
+        {
+            "name": "pickup Ammo",
+            "cost": 1,
+            "post_state": [
+                {
+                    "parameter": "hasAmmo",
+                    "value": true
+                },
+                {
+                    "parameter": "seeAmmo",
+                    "value": false
+                }
+            ],
+            "pre_state": [
+                {
+                    "parameter": "hasWeapon",
+                    "value": true
+                },
+                {
+                    "parameter": "hasAmmo",
+                    "value": false
+                },
+                {
+                    "parameter": "seeAmmo",
+                    "value": true
+                }
+            ]
+        },
+        {
+            "name": "scout with Weapon",
+            "cost": 1,
+            "post_state": [
+                {
+                    "parameter": "seeEnemy",
+                    "value": true
+                }
+            ],
+            "pre_state": [
+                {
+                    "parameter": "hasWeapon",
+                    "value": true
+                },
+                {
+                    "parameter": "hasAmmo",
+                    "value": true
+                },
+                {
+                    "parameter": "seeEnemy",
+                    "value": false
+                }
+            ]
+        },
+        {
+            "name": "Aiming",
+            "cost": 1,
+            "post_state": [
+                {
+                    "parameter": "onLineOfFire",
+                    "value": true
+                }
+            ],
+            "pre_state": [
+                {
+                    "parameter": "hasWeapon",
+                    "value": true
+                },
+                {
+                    "parameter": "hasAmmo",
+                    "value": true
+                },
+                {
+                    "parameter": "seeEnemy",
+                    "value": true
+                },
+                {
+                    "parameter": "onLineOfFire",
+                    "value": false
+                }
+            ]
+        },
+        {
+            "name": "Attack with Weapon",
+            "cost": 2,
+            "post_state": [
+                {
+                    "parameter": "enemyAlive",
+                    "value": false
+                },
+                {
+                    "parameter": "seeEnemy",
+                    "value": false
+                },
+                {
+                    "parameter": "onLineOfFire",
+                    "value": false
+                }
+            ],
+            "pre_state": [
+                {
+                    "parameter": "hasWeapon",
+                    "value": true
+                },
+                {
+                    "parameter": "hasAmmo",
+                    "value": true
+                },
+                {
+                    "parameter": "seeEnemy",
+                    "value": true
+                },
+                {
+                    "parameter": "onLineOfFire",
+                    "value": true
+                }
+            ]
+        },
+        {
+            "name": "Attack with Blood",
+            "cost": 10,
+            "post_state": [
+                {
+                    "parameter": "enemyAlive",
+                    "value": false
+                },
+                {
+                    "parameter": "seeEnemy",
+                    "value": false
+                },
+                {
+                    "parameter": "injured",
+                    "value": true
+                }
+            ],
+            "pre_state": [
+                {
+                    "parameter": "injured",
+                    "value": false
+                },
+                {
+                    "parameter": "seeEnemy",
+                    "value": true
+                },
+                {
+                    "parameter": "enemyAlive",
+                    "value": true
+                }
+            ]
+        },
+        {
+            "name": "Scout Suicidal",
+            "cost": 1,
+            "post_state": [
+                {
+                    "parameter": "seeEnemy",
+                    "value": true
+                }
+            ],
+            "pre_state": [
+                {
+                    "parameter": "injured",
+                    "value": false
+                },
+                {
+                    "parameter": "seeEnemy",
+                    "value": false
+                }
+            ]
+        },
+        {
+            "name": "Change mood",
+            "cost": 10,
+            "post_state": [
+                {
+                    "parameter": "foundPeace",
+                    "value": true
+                }
+            ],
+            "pre_state": [
+                {
+                    "parameter": "readyForPeace",
+                    "value": true
+                }
+            ]
+        }
+    ],
+    "goals": [
+        {
+            "name": "Kill the enemy",
+            "state": [
+                {
+                    "parameter": "enemyAlive",
+                    "value": false
+                }
+            ]
+        },
+        {
+            "name": "Be peaceful",
+            "state": [
+                {
+                    "parameter": "foundPeace",
+                    "value": true
+                }
+            ]
+        }
+    ],
+    "worldState": [
+        {
+            "parameter": "alive",
+            "value": true
+        },
+        {
+            "parameter": "injured",
+            "value": false
+        },
+        {
+            "parameter": "enemyAlive",
+            "value": true
+        },
+        {
+            "parameter": "seeWeapon",
+            "value": false
+        },
+        {
+            "parameter": "seeAmmo",
+            "value": false
+        },
+        {
+            "parameter": "seeBomb",
+            "value": false
+        },
+        {
+            "parameter": "seeHeal",
+            "value": false
+        },
+        {
+            "parameter": "seeEnemy",
+            "value": false
+        },
+        {
+            "parameter": "onLineOfFire",
+            "value": false
+        },
+        {
+            "parameter": "nearEnemy",
+            "value": false
+        },
+        {
+            "parameter": "hasWeapon",
+            "value": false
+        },
+        {
+            "parameter": "hasAmmo",
+            "value": false
+        },
+        {
+            "parameter": "hasBomb",
+            "value": false
+        },
+        {
+            "parameter": "foundPeace",
+            "value": false
+        },
+        {
+            "parameter": "readyForPeace",
+            "value": true
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "type": "Categorization",
+    "elements": [
+        {
+            "type": "Category",
+            "label": "Actions",
+            "elements": [
+                {
+                    "type": "Control",
+                    "label": "Actions",
+                    "scope": "#/properties/actions"
+                }
+            ]
+        },
+        {
+            "type": "Category",
+            "label": "Goals",
+            "elements": [
+                {
+                    "type": "Control",
+                    "scope": "#/properties/goals"
+                }
+            ]
+        },
+        {
+            "type": "Category",
+            "label": "World state",
+            "elements": [
+                {
+                    "type": "VerticalLayout",
+                    "elements": [
+                        {
+                            "type": "Control",
+                            "scope": "#/properties/worldState"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

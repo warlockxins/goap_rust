@@ -1,5 +1,8 @@
-use crate::configs::{hasmap_contains, Gaction, Gnode, PlanConfig};
+mod configs;
+use configs::hasmap_contains;
 use std::collections::HashMap;
+
+pub use configs::{Gaction, Gnode, Goal, PlanConfig};
 
 pub struct Finder<'a> {
     config: &'a PlanConfig,

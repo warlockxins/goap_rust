@@ -1,0 +1,68 @@
+{
+    "definitions": {
+        "parameterValue": {
+            "type": "object",
+            "properties": {
+                "parameter": {
+                    "type": "string",
+                    "enum": {{ parameters }}
+                },
+                "value": {
+                    "type": "boolean"
+                }
+            }
+        }
+    },
+    "type": "object",
+    "properties": {
+        "actions": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "cost": {
+                        "type": "number"
+                    },
+                    "post_state": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/parameterValue"
+                        }
+                    },
+                    "pre_state": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/parameterValue"
+                        }
+                    }
+                }
+            }
+        },
+        "goals": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/parameterValue"
+                        }
+                    }
+                }
+            }
+        },
+        "worldState": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/parameterValue"
+            }
+        }
+    }
+}

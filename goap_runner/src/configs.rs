@@ -30,8 +30,8 @@ pub struct Gnode {
 #[derive(Debug, Deserialize, Clone)]
 pub struct Gaction {
     pub cost: usize,
-    pre_state: HashMap<String, bool>,
-    post_state: HashMap<String, bool>,
+    pub pre_state: HashMap<String, bool>,
+    pub post_state: HashMap<String, bool>,
 }
 
 impl Gaction {

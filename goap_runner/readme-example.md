@@ -1,3 +1,5 @@
+
+```rust
 mod configs;
 use configs::PlanConfig;
 
@@ -31,3 +33,4 @@ fn main() {
         Err(e) => println!("error parsing config: {:?}", e),
     }
 }
+```
