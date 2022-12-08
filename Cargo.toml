@@ -2,5 +2,6 @@
 
 members = [
     "goap_runner",
-    "goap_playground"
+    "goap_playground",
+    "md_logic"
 ]
