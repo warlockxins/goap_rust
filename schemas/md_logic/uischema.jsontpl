@@ -1,0 +1,14 @@
+{
+    "type": "VerticalLayout",
+    "elements": [
+        {% for name in parameters %}
+            {
+                "type": "Control",
+                "scope": "#/properties/{{name}}"
+            }
+            {% if loop.last == false %}
+                ,
+            {% endif %}
+        {% endfor %}
+    ]
+}

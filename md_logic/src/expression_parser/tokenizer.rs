@@ -622,23 +622,21 @@ mod tests {
 
 fn is_postfix_valid(postfix: &Vec<Operand>) -> bool {
     let mut stack: Vec<&Operand> = Vec::with_capacity(postfix.len());
-    let mut valid = false;
 
     for p in postfix {
-        valid = false;
-
         if let Operand::OperatorToken(_o) = p {
             let right = stack.pop().is_some();
             let left = stack.pop().is_some();
 
             if right == left {
                 stack.push(&Operand::Primitive(Value::Null));
-                valid = true;
+            } else {
+                return false;
             }
         } else {
             stack.push(p);
         }
     }
 
-    valid && stack.len() == 1
+    stack.len() == 1
 }

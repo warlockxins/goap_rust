@@ -2,6 +2,7 @@ use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 use axum::Json;
 use std::fs;
+use tera::{Context, Tera};
 
 use md_logic::logic_table::{parse as read_table, run_table};
 
@@ -42,29 +43,21 @@ pub async fn md_logic_data_schema() -> Response {
 
     match table {
         Ok(t) => {
-            let mut schema_main = String::new();
-            schema_main.push_str("{");
+            let contents = fs::read_to_string("./schemas/md_logic/data_schema.jsontpl")
+                .expect("Something went wrong reading md_logic data schema file");
 
-            let mut schema_parts = vec![];
+            let mut tera = Tera::default();
 
-            for (name, in_type) in t.defs.inputs {
-                // schema.push_str("\"  \"");
-                let mut var_schema = String::new();
-                var_schema.push_str("\"");
-                var_schema.push_str(&name);
-                var_schema.push_str("\": {");
-                var_schema.push_str("\"type\": \"");
-                var_schema.push_str(&in_type);
-                var_schema.push_str("\"");
-                var_schema.push_str("}");
+            let template_namespace = "md table data schema";
+            tera.add_raw_template(template_namespace, &contents)
+                .unwrap();
 
-                schema_parts.push(var_schema);
-            }
+            let mut context = Context::new();
+            context.insert("parameters", &t.defs.inputs);
 
-            let parts_str = schema_parts.join(",");
-            schema_main.push_str(&parts_str);
-            schema_main.push_str("}");
-            schema_main.into_response()
+            let ui_config = tera.render(template_namespace, &context).unwrap();
+
+            return ui_config.into_response();
         }
         Err(e) => "{}".into_response(),
     }
@@ -72,7 +65,33 @@ pub async fn md_logic_data_schema() -> Response {
 }
 
 pub async fn md_logic_uischema() -> Response {
-    return "{}".into_response();
+    let table_contents = fs::read_to_string("./data/md_logic/table.md")
+        .expect("Something went wrong reading md_logic file for uischema");
+
+    let table = read_table(&table_contents);
+
+    match table {
+        Ok(t) => {
+            let contents = fs::read_to_string("./schemas/md_logic/uischema.jsontpl")
+                .expect("Something went wrong reading md_logic schema file");
+
+            let names: Vec<String> = t.defs.inputs.into_iter().map(|(name, _)| name).collect();
+
+            let mut tera = Tera::default();
+
+            let template_namespace = "md table ui schema";
+            tera.add_raw_template(template_namespace, &contents)
+                .unwrap();
+
+            let mut context = Context::new();
+            context.insert("parameters", &names);
+
+            let ui_config = tera.render(template_namespace, &context).unwrap();
+
+            return ui_config.into_response();
+        }
+        Err(e) => "{}".into_response(),
+    }
 }
 pub async fn md_logic_inputs() -> Response {
     return "{}".into_response();

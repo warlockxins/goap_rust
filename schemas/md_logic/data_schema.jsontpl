@@ -1,0 +1,14 @@
+{
+    "type": "object",
+    "properties": {
+       	{% for p in parameters %}
+		    "{{ p.0 }}": {
+                "type": "{{ p.1 }}"
+            }
+            {% if loop.last == false %}
+                ,
+            {% endif %}
+        {% endfor %}
+    }    
+}  
+
