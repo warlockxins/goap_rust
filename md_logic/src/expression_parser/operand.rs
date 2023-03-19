@@ -110,7 +110,6 @@ impl std::cmp::Ord for Operand {
                 (Value::Number(n1_base), Value::Number(n2_base)) => {
                     let n1 = n1_base.as_f64().unwrap_or(0.0);
                     let n2 = n2_base.as_f64().unwrap_or(0.0);
-                    // (Operand::Number(n1), Operand::Number(n2)) => {
                     if n1 > n2 {
                         return std::cmp::Ordering::Greater;
                     }

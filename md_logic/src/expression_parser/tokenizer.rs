@@ -254,6 +254,14 @@ impl<'a> Tokenizer<'a> {
             return Ok(Operand::Primitive(Value::Bool(variable == "true")));
         }
 
+        let parts_not_empty = variable.split('.').all(|part| part.len() > 0);
+
+        if parts_not_empty == false {
+            return Err(format!(
+                "incorrect path \"{}\" at {}",
+                variable, range.started_at,
+            ));
+        }
         return Ok(Operand::Variable(variable.to_string()));
     }
 
@@ -497,6 +505,15 @@ mod tests {
             postfix?,
             vec![Operand::Variable("expectedVariable".to_string())]
         );
+        Ok(())
+    }
+
+    #[test]
+    fn fails_wrong_variable_path() -> Result<(), String> {
+        let formula = "expectedVariablePath.endMissing.";
+        let mut parser = Tokenizer::new(&formula);
+        let parser_result = parser.parse();
+        assert!(!parser_result.is_ok());
         Ok(())
     }
 
